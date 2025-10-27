@@ -1,0 +1,96 @@
+html{
+    height: 100%;
+}
+body{
+    background-color: rgb(141, 67, 179);
+    min-height: 100%;
+}
+#game-environment{
+    width: 100%;
+}
+.flip-start-shadow{
+    box-shadow: 10px 10px 15px rgb(0, 0, 0);
+    transition: box-shadow 0.4s ease-in-out;
+}
+.flip-end-shadow{
+    box-shadow: 0 0 0 rgb(0, 0, 0);
+    transition: box-shadow 0.75s ease-in-out;
+}
+.img{
+    border-radius: 10px;
+}
+.card{
+    border-radius: 10px;
+    background-color: rgb(246, 150, 6);
+    height: 128px;
+    width: 96px;
+    border: 2px solid black;
+}
+.grid{
+    align-items: centers;
+}
+#winmsg{
+    font-size: xx-large;
+    position: absolute;
+    flex: content;
+    justify-content: center;
+    top: 35%;
+    width: 300px;
+    height: 100px;
+    border: 2px solid black;
+    border-radius: 15px;
+    background-color: rgba(0, 255, 255, 0.9);
+}
+.backbtn{
+    height: 40px;
+    width: 70px;
+    border-radius: 10px;
+    background-color: aquamarine;
+}
+.backbtn:hover{
+    background-color: rgba(0, 255, 170, 0.8);
+    transition: 0.4s;
+}
+#movecount{
+    border: 2px solid black;
+    height: 70px;
+    width: 150px;
+    flex: content;
+    align-content: center;
+    text-align: center;
+    background-color: rgb(4, 224, 224);
+}
+.menubtns{
+    height: 100px;
+    width: 300px;
+    font-size: xx-large;
+    border-radius: 15px;
+    margin: 5px;
+    background-color: rgb(44, 246, 179);
+}
+.menubtns:hover{
+    background-color: rgb(255, 153, 0);
+    border-width: 4px;
+    transition: 0.5s;
+}
+#scoretable{
+    align-content: center;
+    height: 400px;
+    width: 350px;
+    background-color: orange;
+    border-radius: 30px;
+}
+table, tr, th, td{
+    border: 2px solid black;
+    font-size: larger;
+}
+#title{
+    border: 2px solid black;
+    background-color: rgb(232, 117, 94);
+    margin-bottom: 15px;
+}
+#back{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}

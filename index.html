@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Memory Game</title>
+        <link rel="stylesheet" href="style.css">
+        <link href="bootstrap-5.3.8-dist/css/bootstrap-grid.css" rel="stylesheet">
+        <script src="jquery.js"></script>
+    </head>
+    <body class="d-flex justify-content-center align-items-center">
+        <script>
+            let found=0;
+            let moves=0;
+            let totalpair=4;
+            let card1,card2;
+            let difficulty;
+            let images = ['a_clubs.png','a_heart.png','a_diamond.png','a_spade.png','2_diamonds.png','3_diamonds.png',
+                          '2_hearts.png','3_hearts.png','2_clubs.png','3_clubs.png','2_spades.png','3_spades.png'];
+            let i,temp=0,c=0;
+            $(document).ready(function(){
+                $(document).on('click','.card',
+                    function(){
+                        if(moves<2 && ($(this).data('clickable') == 't')){
+                            $(this).data({'clickable' : 'f'});
+                            $(this).toggleClass('flip-start-shadow');
+                            $(this).animate({'width' : '0px','height' : '128px'},500,
+                                function(){$(this).toggleClass('flip-start-shadow');
+                                            $(this).toggleClass('flip-end-shadow');
+                                            $(this).children().css({'width' : '96px','height' : '128px'});
+                                            $(this).children().show();
+                                        });
+                            $(this).animate({'width' : '96px','height' : '128px'},500,
+                                function(){$(this).toggleClass('flip-end-shadow');
+                                            if(moves == 2 && (card2.children('.img').data('val') == $(this).children('.img').data('val'))){
+                                                setTimeout(checksame(),350);
+                                                called = 1;
+                                            }
+                                });
+                            moves++;
+                            if(moves == 1) card1 = $(this);
+                            else if(moves == 2) card2 = $(this);
+                        }
+                    });
+                $(document).on('click','#easybtn',function(){setGame();shuffleCards(4,2,4,'easy');});
+                $(document).on('click','#medbtn',function(){setGame();shuffleCards(6,3,4,'medium');});
+                $(document).on('click','#hardbtn',function(){setGame();shuffleCards(8,4,4,'hard');});
+                $(document).on('click','#scorebtn',function(){showScore();});
+                $(document).on('click','.backbtn',function(){window.location.reload();});
+                setMenu();
+            });
+            function showScore(){
+                let easy=localStorage.getItem('easyscore');
+                let medium=localStorage.getItem('mediumscore');
+                let hard=localStorage.getItem('hardscore');
+                $('body').html(`<div id="scoretable" class="d-flex flex-column justify-content-center align-items-center">
+                                <table>
+                                    <caption><h1>HighScores</h1></caption>
+                                    <thead>
+                                        <tr><th>Difficulty</th><th>Moves</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Easy</td><td>${easy}</td></tr>
+                                        <tr><td>Medium</td><td>${medium}</td></tr>
+                                        <tr><td>Hard</td><td>${hard}</td></tr>
+                                    </tbody>
+                                </table>
+                                <button class="backbtn">Back</button>
+                                </div>`);
+            }
+            function setMenu(){
+                $('body').html(`<div class="d-flex flex-column justify-content-center align-items-center">
+                                <img src="assets/title.png" id="title">
+                                <div class="d-flex flex-column justify-content-center">
+                                    <button class="menubtns" id="easybtn">Easy</button>
+                                    <button class="menubtns" id="medbtn">Medium</button>
+                                    <button class="menubtns" id="hardbtn">Hard</button>
+                                    <button class="menubtns" id="scorebtn">HighScores</button>
+                                </div>
+                                </div>`);
+            }
+            function setGame(){
+                $('body').html(`<div class="flex-fill container" id="game-environment">
+                                    <div class="row">
+                                        <div class="col-2 movecount d-flex align-items-center"><p id="movecount">TOTAL MOVES: <span id="totmoves">0</span></p></div>
+                                        <div class="col-10 container" id="cards"></div>
+                                    </div>
+                                    <button class="backbtn" id="back">Back</button>
+                                </div>`);
+            }
+            function shuffleCards(tot,row,col,diff){
+                difficulty=diff;
+                totalpair=tot;
+                let totcards = tot*2;
+                let place = new Array(totcards);
+                let placed = new Array(totcards);
+                let imagetaken = new Array(tot);
+                let cantake = new Array(12);
+                for(i=0;i<12;i++) cantake[i]='t';
+                let placeimg = new Array(totcards);
+                for(i=0;i<totcards;i++) 
+                    placed[i]='f';
+                i=0;
+                c=0;
+                while(c<tot){
+                    temp = Math.floor((Math.random()*12)%12);
+                    if(cantake[temp] == 't'){
+                        imagetaken[i]=images[temp];
+                        cantake[temp] = 'f';
+                        i++;
+                    }else{
+                        c--;
+                    }
+                    c++;
+                }
+                i=0;
+                while(i<tot){
+                    c=0;
+                    while(true){
+                        if(c==2) break;
+                        temp = Math.floor((Math.random()*totcards)%totcards);
+                        if(placed[temp]=='f'){
+                            place[temp]=i;
+                            placeimg[temp]=imagetaken[i];
+                            placed[temp] = 't';
+                            console.log(temp);
+                            c++;
+                        }
+                    }
+                    i++;
+                }
+                c=0;
+                console.log('passed');
+                $('#cards').html('');
+                for(i=0;i<row;i++){
+                    $('#cards').append(`<div class="row mt-2 rownum${i}"></div>`);
+                    for(j=0;j<col;j++){
+                        $(`.rownum${i}`).append(`<div class="col d-flex justify-content-center"><div class="card" data-clickable="t"><image class="img" data-val="${place[c]}" src="assets/${placeimg[c]}" hidden></image></div></div>`);
+                        c++;
+                        console.log('done');
+                    }
+                }
+            }
+            function setHighscore(){
+                let score;
+                score = parseInt(localStorage.getItem(`${difficulty}score`));
+                if(parseInt($('#totmoves').text()) < score){
+                    localStorage.setItem(`${difficulty}score`,parseInt($('#totmoves').text()));
+                    return 'New High Score!';
+                }else{
+                    return 'Game Won';
+                }
+            }
+            function checkEnd(){
+                if(found == totalpair){
+                    let msg = setHighscore();
+                    $('body').append(`<div id="winmsg"><p style="text-align: center;">${msg}<br><button class="backbtn">Menu</button></p></div>`);      
+                }
+            }
+            function checksame(){
+                if(card1.children('.img').data('val') == card2.children('.img').data('val')){
+                    moves=0;
+                    temp = parseInt($('#totmoves').text());
+                    temp++;
+                    $('#totmoves').text(temp);
+                    found++;
+                    checkEnd();
+                }else{
+                    setTimeout(function(){
+                    $(card1).toggleClass('flip-start-shadow');
+                    $(card2).toggleClass('flip-start-shadow');
+                    $(card1).animate({'width' : '0px','height' : '128px'},500,
+                        function(){$(card1).toggleClass('flip-start-shadow');
+                                    $(card1).toggleClass('flip-end-shadow');
+                                    $(card1).children().css({'width' : '96px','height' : '128px'});
+                                    $(card1).children().hide();
+                                });
+                    $(card2).animate({'width' : '0px','height' : '128px'},500,
+                        function(){$(card2).toggleClass('flip-start-shadow');
+                                    $(card2).toggleClass('flip-end-shadow');
+                                    $(card2).children().css({'width' : '96px','height' : '128px'});
+                                    $(card2).children().hide();
+                                });
+                    $(card1).animate({'width' : '96px','height' : '128px'},500,
+                        function(){$(card1).toggleClass('flip-end-shadow');
+                                    $(card1).data({'clickable' : 't'});
+                                });
+                    $(card2).animate({'width' : '96px','height' : '128px'},500,
+                        function(){$(card2).toggleClass('flip-end-shadow');
+                                    $(card2).data({'clickable' : 't'});
+                                    moves=0;
+                                    temp = parseInt($('#totmoves').text());
+                                    temp++;
+                                    $('#totmoves').text(temp);
+                                    called=0;
+                                });
+                    },300);
+                }
+            }
+        </script>
+    </body>
+</html>
