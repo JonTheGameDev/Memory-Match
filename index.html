@@ -45,6 +45,11 @@
                 $(document).on('click','#hardbtn',function(){setGame();shuffleCards(8,4,4,'hard');});
                 $(document).on('click','#scorebtn',function(){showScore();});
                 $(document).on('click','.backbtn',function(){window.location.reload();});
+                if(!localStorage.getItem('easyscore')){
+                    localStorage.setItem('easyscore',99);
+                    localStorage.setItem('mediumscore',99);
+                    localStorage.setItem('hardscore',99);
+                }
                 setMenu();
             });
             function showScore(){
